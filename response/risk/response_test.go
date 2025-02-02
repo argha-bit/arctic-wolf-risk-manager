@@ -56,7 +56,7 @@ func TestProcessErrorResponse(t *testing.T) {
 				Message: "Invalid Request",
 				Data:    []string{},
 				Error: map[string]string{
-					"error": "Unsupported Media Type. Please use application/json",
+					"error": "Unsupported Media Type. Please use application/json in request header Content-Type",
 				},
 			},
 		},

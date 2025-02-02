@@ -11,7 +11,10 @@ Once All your Modules are downloaded the code can be Run using the command
 ```
 go run cmd\main.go
 ```
-
+You can run testcases also to make sure that unit functions are behaving as intended 
+```
+go test ./...
+```
 Arctic Wolf Risk manager serves 2 endpoints
 
 ### Create Risk
@@ -44,3 +47,17 @@ curl --location --request GET 'http://localhost:8080/v1/risks/{id}'
 ```
 To fetch a Risk Details by its id please replace `{id}` with the id returned after risk creation
 
+### Run as a Docker Container
+To run the application in a docker container
+#### Build the Container 
+```
+docker build -t arctic-wold-risk-manager .
+```
+#### Run the container
+```
+docker run -d --name arctic-wolf-risk-manager -p 8080:8080 arctic-wolf-risk-manager
+```
+#### Stop the container
+```
+docker stop <container_id>
+```

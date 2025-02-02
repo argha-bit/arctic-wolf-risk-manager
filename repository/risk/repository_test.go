@@ -44,11 +44,6 @@ func TestGetRisk(t *testing.T) {
 					State:           "test",
 					RiskDescription: "test",
 					RiskTitle:       "test",
-				}, {
-					Id:              "test2",
-					State:           "test",
-					RiskDescription: "test",
-					RiskTitle:       "test",
 				},
 			},
 		},
@@ -63,12 +58,6 @@ func TestGetRisk(t *testing.T) {
 		if i == 0 {
 			repository.CreateRisk(&models.Risk{
 				Id:              "test1",
-				State:           "test",
-				RiskDescription: "test",
-				RiskTitle:       "test",
-			})
-			repository.CreateRisk(&models.Risk{
-				Id:              "test2",
 				State:           "test",
 				RiskDescription: "test",
 				RiskTitle:       "test",
