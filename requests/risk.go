@@ -17,7 +17,7 @@ type GetRiskRequest struct {
 	Id string `param:"id"`
 }
 type CreateRiskRequest struct {
-	State           string `json:"state" validate:"required,checkValidRiskStatus"`
+	State           string `json:"state" validate:"checkRiskState,checkValidRiskStatus"`
 	RiskTitle       string `json:"title"`
 	RiskDescription string `json:"description"`
 }

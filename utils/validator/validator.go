@@ -36,9 +36,11 @@ func NewValidator() *Validator {
 
 func setUpValidations(validatorObj *Validator) {
 	validatorObj.Validator.RegisterValidation("checkValidRiskStatus", validatorObj.checkValidRiskStatus)
+	validatorObj.Validator.RegisterValidation("checkRiskState", validatorObj.checkRiskState)
 }
 func setUpRegisteredTranslation(validatorObj *Validator) {
 	registerTranslation(validatorObj.Validator, validatorObj.trans, "checkValidRiskStatus", `invalid risk status: only open/closed/accepted/investigating are accepted`)
+	registerTranslation(validatorObj.Validator, validatorObj.trans, "checkRiskState", `risk can not be created with out a state`)
 }
 
 func registerTranslation(v *validator.Validate, trans ut.Translator, tag, message string) {
@@ -49,6 +51,17 @@ func registerTranslation(v *validator.Validate, trans ut.Translator, tag, messag
 		return t
 	},
 	)
+}
+
+func (v *Validator) checkRiskState(fl validator.FieldLevel) bool {
+	status, ok := fl.Field().Interface().(string)
+	if !ok {
+		return false
+	}
+	if status == "" {
+		return false
+	}
+	return true
 }
 
 func (v *Validator) checkValidRiskStatus(fl validator.FieldLevel) bool {

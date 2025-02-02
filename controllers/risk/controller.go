@@ -25,11 +25,11 @@ func (risk Controller) GetRisk(c echo.Context) error {
 	var data []models.Risk
 	if err = risk.req.Bind(c, req, dataModel); err != nil {
 		log.Println("error in reading request", err.Error())
-		resp, _ := risk.resp.ProcessErrorResponse(err)
+		resp := risk.resp.ProcessErrorResponse(err)
 		return c.JSON(http.StatusBadRequest, resp)
 	}
 	data = risk.usecase.GetRisk(dataModel)
-	resp, _ := risk.resp.ProcessRiskResponse(req, data)
+	resp := risk.resp.ProcessRiskResponse(req, data)
 
 	log.Println("response returned ", resp)
 	return c.JSON(http.StatusOK, resp)
@@ -41,11 +41,11 @@ func (risk Controller) CreateRisk(c echo.Context) error {
 	var data models.Risk
 	if err = risk.req.Bind(c, req, dataModel); err != nil {
 		log.Println("error in reading request", err.Error())
-		resp, _ := risk.resp.ProcessErrorResponse(err)
+		resp := risk.resp.ProcessErrorResponse(err)
 		return c.JSON(http.StatusBadRequest, resp)
 	}
 	data = risk.usecase.CreateRisk(dataModel)
-	resp, _ := risk.resp.ProcessRiskResponse(req, data)
+	resp := risk.resp.ProcessRiskResponse(req, data)
 
 	log.Println("response returned ", resp)
 	return c.JSON(http.StatusOK, resp)

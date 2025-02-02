@@ -7,6 +7,7 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -45,10 +46,24 @@ func TestProcessErrorResponse(t *testing.T) {
 				Error:   ErrrorResp{},
 			},
 		},
+		{
+			Name: "echo http Error",
+			Err: &echo.HTTPError{
+				Code: 415,
+			},
+			ExpectedResponse: ArcticWolfResponse{
+				Code:    "ARW400",
+				Message: "Invalid Request",
+				Data:    []string{},
+				Error: map[string]string{
+					"error": "Unsupported Media Type. Please use application/json",
+				},
+			},
+		},
 	}
 	assert := assert.New(t)
 	for _, test := range testCases {
-		actualResponse, _ := responsehandler.ProcessErrorResponse(test.Err)
+		actualResponse := responsehandler.ProcessErrorResponse(test.Err)
 		assert.Equal(test.ExpectedResponse, actualResponse.(ArcticWolfResponse), test.Name)
 	}
 
@@ -117,7 +132,7 @@ func TestProcessRiskResponse(t *testing.T) {
 	assert := assert.New(t)
 
 	for _, test := range testcases {
-		resp, _ := responsehandler.ProcessRiskResponse(test.Req, test.Data)
+		resp := responsehandler.ProcessRiskResponse(test.Req, test.Data)
 		assert.Equal(test.ExpectedResponse.(ArcticWolfResponse), resp.(ArcticWolfResponse), test.Name)
 	}
 }

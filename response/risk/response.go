@@ -5,6 +5,9 @@ import (
 	"arctic-wolf-risk-manager/requests"
 	"arctic-wolf-risk-manager/response"
 	"arctic-wolf-risk-manager/utils/validator"
+	"strings"
+
+	"github.com/labstack/echo/v4"
 )
 
 type RiskResponse struct {
@@ -18,7 +21,7 @@ type ArcticWolfResponse struct {
 type ErrrorResp struct {
 }
 
-func (r RiskResponse) ProcessRiskResponse(req interface{}, data interface{}) (interface{}, error) {
+func (r RiskResponse) ProcessRiskResponse(req interface{}, data interface{}) interface{} {
 	resp := ArcticWolfResponse{}
 	switch req.(type) {
 	case *requests.GetRiskRequest:
@@ -35,9 +38,9 @@ func (r RiskResponse) ProcessRiskResponse(req interface{}, data interface{}) (in
 		resp.Data = data
 		resp.Error = ErrrorResp{}
 	}
-	return resp, nil
+	return resp
 }
-func (r RiskResponse) ProcessErrorResponse(err error) (interface{}, error) {
+func (r RiskResponse) ProcessErrorResponse(err error) interface{} {
 	resp := ArcticWolfResponse{}
 	switch err.(type) {
 	case *validator.ValidationError:
@@ -45,14 +48,24 @@ func (r RiskResponse) ProcessErrorResponse(err error) (interface{}, error) {
 		resp.Message = "Invalid Input"
 		resp.Data = []string{}
 		resp.Error = err.(*validator.ValidationError).Fields
+	case *echo.HTTPError:
+		if err.(*echo.HTTPError).Code == 415 {
+			resp.Code = "ARW400"
+			resp.Message = "Invalid Request"
+			resp.Data = []string{}
+			resp.Error = map[string]string{
+				"error": "Unsupported Media Type. Please use application/json in request header Content-Type",
+			}
+		}
 
 	default:
 		resp.Code = "ARW500"
 		resp.Message = "Internal Server Error"
 		resp.Data = []string{}
+		strings.Split(err.Error(), "")
 		resp.Error = ErrrorResp{}
 	}
-	return resp, nil
+	return resp
 }
 
 func NewRiskResponseHandler() response.RiskResponse {
