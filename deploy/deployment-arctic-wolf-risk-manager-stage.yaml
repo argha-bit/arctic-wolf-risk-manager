@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: arctic-wolf-risk-manager
+  namespace: stage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app:  arctic-wolf-risk-manager
+  template:
+    metadata:
+      labels:
+        app:  arctic-wolf-risk-manager
+    spec:
+      containers:
+      - name: app
+        image:  ghcr.io/argha-bit/arctic-wolf-risk-manager:10
+        ports:
+        - containerPort: 8080
+      imagePullSecrets:
+      - name: ghcr-secret
